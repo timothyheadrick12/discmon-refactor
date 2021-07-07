@@ -28,5 +28,4 @@ class Game:
                 Game.emu.send_input(WindowEvent.RELEASE_BUTTON_A)
 
 
-
 Game()
