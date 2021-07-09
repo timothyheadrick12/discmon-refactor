@@ -1,5 +1,5 @@
 from dc_client import DiscordClient
-from gb import Game, Button
+from pokemon import PokemonEmu, Button
 from threading import Thread
 import time
 
@@ -7,7 +7,7 @@ client = DiscordClient()
 # client.run("ODYxOTk4MTEzNzEwOTMxOTY4.YOR8TQ.nkepaU8wSkM_u7EBjXZZqbjd880")
 
 
-gb = Game()
+gb = PokemonEmu()
 
 
 def test_1():

@@ -11,3 +11,19 @@
 - Create eventstack so that events can overflow then execute in order
 
 ---
+
+## PokemonEmu class
+
+---
+
+- Put all Pokemon specific events within this class.
+
+---
+
+## DiscordClient class
+
+---
+
+- TODO
+
+---

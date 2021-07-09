@@ -23,10 +23,15 @@ class Button(Enum):
 class Game:
     """Game class contains a running emulator and associated methods"""
 
-    def __init__(self):
+    def __init__(self, game):
+        """Constructor for Game object that initializes __interrupt to false and sets_emulation_speed to 2
+
+        Args:
+            game (String): path to rom
+        """
         self.__interrupt = False
         self.__eventStack = []
-        self.__emu = PyBoy("roms/Pokemon - Red Version (USA, Europe) (SGB Enhanced).gb")
+        self.__emu = PyBoy(game)
         self.__emu.set_emulation_speed(2)
 
     def stackEvent(eventFunc):
