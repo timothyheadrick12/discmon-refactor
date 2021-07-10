@@ -18,6 +18,8 @@
 
 - Put all Pokemon specific events within this class.
 
+- Some events in the Pokemon class might require a lot of padding for gif recording. i.e pressing A when reading text.
+
 ---
 
 ## DiscordClient class
