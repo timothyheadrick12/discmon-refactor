@@ -15,10 +15,12 @@ def test_1():
 
         if letter == "L":
             gb.emu.load_state(open("saves/start_of_game.state", "rb"))
-        if letter == "a":
-            gb.pressButtonEvent(Button.A, 15)
-        if letter == "l":
-            gb.pressButtonEvent(Button.LEFT, 10)
+        if letter in ("1", "2", "3", "4"):
+            gb.moveNumSpacesEvent(Button.LEFT, int(letter))
+        if letter in ("5", "6", "7", "8"):
+            gb.moveNumSpacesEvent(Button.UP, int(letter))
+        if letter == "r":
+            gb.changeDirection(Button.RIGHT)
 
 
 Thread(target=test_1).start()

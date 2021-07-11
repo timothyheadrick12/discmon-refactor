@@ -46,6 +46,9 @@ class Game:
         stackEvents should not call other stackEvents. This is counter intuitive as the called event will be added to
         the very back of the eventStack when called. stackEvents all are saved as gifs in the gif directory after execution
 
+        TODO: Implement event priorities so that one event can overtake another.
+        TODO: Implement events tacking a tick function as an argument for ticks to have custom behavior while running that event.
+
         Args:
             eventFunc (function): Event function that should interrupt running and be added to stack
 
@@ -56,7 +59,7 @@ class Game:
 
         # This function is the function than runs when popped from the eventStack array with eventStack.pop(x)()
         @wraps(eventFunc)
-        def addInterrupts(*args):
+        def addInterrupts(*args, **kwargs):
             eventFunc.__executions += 1
             args[0].__interrupt = True
 
@@ -74,8 +77,8 @@ class Game:
 
         # This function changes functionality of eventFunc so that it instead adds itself to the evenStack on execution
         @wraps(eventFunc)
-        def stacker(*args):
-            args[0].__eventStack.append(partial(addInterrupts, *args))
+        def stacker(*args, **kwargs):
+            args[0].__eventStack.append(partial(addInterrupts, *args, **kwargs))
 
         return stacker
 

@@ -20,6 +20,8 @@
 
 - Some events in the Pokemon class might require a lot of padding for gif recording. i.e pressing A when reading text.
 
+- Will need to check tiles of the tilemap occasionally in order to see if battles have started or something similar.
+
 ---
 
 ## DiscordClient class
