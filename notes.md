@@ -10,6 +10,16 @@
 
 - Create eventstack so that events can overflow then execute in order
 
+- Need events that interrupt the main control flow no matter what is happening (In case of Pokemon for battles, people talking to you, etc)
+
+  - interruptEvents should all have a condition in them that checks if they are happening. This condition will contain all the event's code.
+
+    - "All the code for the event" means the event completely takes over the mainLoop and must manually tick the emulator and handle logic.
+
+  - All interrupt events needed should be initialized by the child class (i.e. PokemonEmulator) in an init that pushes them into the interruptEvents list.
+
+  - The Game class will loop over all possible interruptEvents each tick no matter what is happening.
+
 ---
 
 ## PokemonEmu class

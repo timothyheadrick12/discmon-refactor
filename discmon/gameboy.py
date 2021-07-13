@@ -20,8 +20,8 @@ class Button(Enum):
     START = auto()
 
 
-class Game:
-    """Game class contains a running emulator and associated methods"""
+class GameboyEmulator:
+    """GameboyEmulator class contains a running emulator and associated methods"""
 
     __captureRate = 1  # Ticks per capture for imageBuffer
     __eventSmoothing = 25  # Ticks around events saved to imageBuffer for smoothing gifs
@@ -34,6 +34,7 @@ class Game:
         """
         self.__interrupt = False
         self.__eventStack = []
+        self.__interruptEvents = []
         self.__imageBuffer = []
         self.__tickCounter = 0
         self.emu = PyBoy(game)
@@ -47,7 +48,7 @@ class Game:
         the very back of the eventStack when called. stackEvents all are saved as gifs in the gif directory after execution
 
         TODO: Implement event priorities so that one event can overtake another.
-        TODO: Implement events tacking a tick function as an argument for ticks to have custom behavior while running that event.
+        TODO: Implement events taking a tick function as an argument for ticks to have custom behavior while running that event.
 
         Args:
             eventFunc (function): Event function that should interrupt running and be added to stack
@@ -82,16 +83,40 @@ class Game:
 
         return stacker
 
-    def __absoluteTick(self):
-        """The absoluteTick() method is an uninterruptable tick.
-        It adds PIL images to the __imageBuffer"""
+    """
+    def interruptEventExample(self):
+        if(thisEventHasStartedInTheGame):
+            while (eventIsHappening):   
+                I now control all input and check for it
+                
+                check for custom forms of input only available here (i.e use move X)
+                
+                tick
+
+                manually control adding to the imageBuffer and creating gifs
+
+    """
+
+    def __checkForInterruptEvents(self):
+        """The checkForInterruptEvents() method checks if control needs to be passed to any event
+        in the interruptEvents list.
+        """
+        for event in self.__interruptEvents:
+            self.event()
+
+    def __stackEventTick(self):
+        """The stackEventTick() method is used in stackEvents. It adds PIL images to the __imageBuffer."""
+        self.__checkForInterruptEvents()
         self.emu.tick()
         self.__tickCounter += 1
         if self.__tickCounter % self.__captureRate == 0:
             self.__imageBuffer.append(self.__screen.screen_image())
 
     def tick(self):
-        """The tick() method is an interruptable tick."""
+        """The tick() method is a tick meant to be passively used as it is interrupted by
+        both stackEvents and interruptEvents.
+        """
+        self.__checkForInterruptEvents()
         if not self.__interrupt:
             # When not interrupted if eventStack is not empty, execute the next event
             if len(self.__eventStack) != 0:
@@ -106,7 +131,7 @@ class Game:
             msec (int milliseconds): Number of milliseconds to run the emulator
         """
         for x in range(ticks):
-            self.__absoluteTick()
+            self.__stackEventTick()
 
     def saveGifFromBuffer(
         self,
