@@ -80,6 +80,9 @@ class GameboyEmulator:
         @wraps(eventFunc)
         def stacker(*args, **kwargs):
             args[0].__eventStack.append(partial(addInterrupts, *args, **kwargs))
+            return eventFunc.__name__ + str(
+                eventFunc.__executions + 1
+            )  # returns name of function when called used by dc_client to get gifs. TODO: This needs to be changed. It is a bad solution long term
 
         return stacker
 

@@ -1,9 +1,6 @@
-from dc_client import DiscordClient
+from dc_client import Threader
 from pokemon import PokemonEmu, Button
 from threading import Thread
-
-client = DiscordClient()
-# client.run("ODYxOTk4MTEzNzEwOTMxOTY4.YOR8TQ.nkepaU8wSkM_u7EBjXZZqbjd880")
 
 
 gb = PokemonEmu()
@@ -24,6 +21,7 @@ def test_1():
 
 
 Thread(target=test_1).start()
+dThread = Threader(gb)
 
 gb.emu.load_state(open("saves/start_of_game.state", "rb"))
 while True:
