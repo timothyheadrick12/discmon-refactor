@@ -5,6 +5,7 @@ from math import isnan
 from threading import Thread
 import asyncio
 import time
+import os.path
 
 
 class DiscordClient(discord.Client):
@@ -38,9 +39,9 @@ class DiscordClient(discord.Client):
                     )
                 else:
                     eventName = self.gb.moveNumSpacesEvent(Button.UP, 1)
-                time.sleep(
-                    1
-                )  # TODO: This needs to be changed, find a way to send the gif once its existence is confirmed
+                filePath = "gifs/" + eventName + ".gif"
+                while not os.path.exists(filePath):
+                    time.sleep(0.4)
                 await message.channel.send(
                     file=discord.File("gifs/" + eventName + ".gif")
                 )
@@ -51,9 +52,9 @@ class DiscordClient(discord.Client):
                     )
                 else:
                     eventName = self.gb.moveNumSpacesEvent(Button.LEFT, 1)
-                time.sleep(
-                    1
-                )  # TODO: This needs to be changed, find a way to send the gif once its existence is confirmed
+                filePath = "gifs/" + eventName + ".gif"
+                while not os.path.exists(filePath):
+                    time.sleep(0.4)
                 await message.channel.send(
                     file=discord.File("gifs/" + eventName + ".gif")
                 )
@@ -64,22 +65,20 @@ class DiscordClient(discord.Client):
                     )
                 else:
                     eventName = self.gb.moveNumSpacesEvent(Button.DOWN, 1)
-                time.sleep(
-                    1
-                )  # TODO: This needs to be changed, find a way to send the gif once its existence is confirmed
-                await message.channel.send(
-                    file=discord.File("gifs/" + eventName + ".gif")
-                )
+                filePath = "gifs/" + eventName + ".gif"
+                while not os.path.exists(filePath):
+                    time.sleep(0.4)
+                await message.channel.send(file=discord.File(filePath))
             elif messageArgs[1] == "d" or messageArgs[1] == "right":
                 if len(messageArgs) >= 3 and (not (isnan(int(messageArgs[2])))):
                     eventName = self.gb.moveNumSpacesEvent(
-                        Button.DOWN, int(messageArgs[2])
+                        Button.RIGHT, int(messageArgs[2])
                     )
                 else:
-                    eventName = self.gb.moveNumSpacesEvent(Button.DOWN, 1)
-                time.sleep(
-                    1
-                )  # TODO: This needs to be changed, find a way to send the gif once its existence is confirmed
+                    eventName = self.gb.moveNumSpacesEvent(Button.RIGHT, 1)
+                filePath = "gifs/" + eventName + ".gif"
+                while not os.path.exists(filePath):
+                    time.sleep(0.4)
                 await message.channel.send(
                     file=discord.File("gifs/" + eventName + ".gif")
                 )

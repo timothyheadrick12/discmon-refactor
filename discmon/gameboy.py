@@ -33,7 +33,7 @@ class GameboyEmulator:
             game (String): path to rom
         """
         self.__interrupt = False
-        self.__eventStack = []
+        self.__eventQueue = []
         self.__interruptEvents = []
         self.__imageBuffer = []
         self.__tickCounter = 0
@@ -41,24 +41,24 @@ class GameboyEmulator:
         self.__screen = self.emu.botsupport_manager().screen()
         self.emu.set_emulation_speed(0)
 
-    def stackEvent(eventFunc):
-        """The stackEvent decorator surrounds a given function with interrupts and adds it to the eventStack
+    def queueEvent(eventFunc):
+        """The queueEvent decorator surrounds a given function with interrupts and adds it to the eventQueue
 
-        stackEvents should not call other stackEvents. This is counter intuitive as the called event will be added to
-        the very back of the eventStack when called. stackEvents all are saved as gifs in the gif directory after execution
+        queueEvents should not call other queueEvents. This is counter intuitive as the called event will be added to
+        the very back of the eventQueue when called. queueEvents all are saved as gifs in the gif directory after execution
 
         TODO: Implement event priorities so that one event can overtake another.
         TODO: Implement events taking a tick function as an argument for ticks to have custom behavior while running that event.
 
         Args:
-            eventFunc (function): Event function that should interrupt running and be added to stack
+            eventFunc (function): Event function that should interrupt running and be added to queue
 
         Returns:
-            function: Decorated function that interrupts emulator when removed from stack
+            function: Decorated function that interrupts emulator when removed from queue
         """
         eventFunc.__executions = 0  # Any events should have there executions tracked so this member variable is added
 
-        # This function is the function than runs when popped from the eventStack array with eventStack.pop(x)()
+        # This function is the function than runs when popped from the eventQueue array with eventQueue.pop(x)()
         @wraps(eventFunc)
         def addInterrupts(*args, **kwargs):
             eventFunc.__executions += 1
@@ -76,15 +76,15 @@ class GameboyEmulator:
 
             args[0].__interrupt = False
 
-        # This function changes functionality of eventFunc so that it instead adds itself to the evenStack on execution
+        # This function changes functionality of eventFunc so that it instead adds itself to the evenqueue on execution
         @wraps(eventFunc)
-        def stacker(*args, **kwargs):
-            args[0].__eventStack.append(partial(addInterrupts, *args, **kwargs))
+        def queuer(*args, **kwargs):
+            args[0].__eventQueue.append(partial(addInterrupts, *args, **kwargs))
             return eventFunc.__name__ + str(
                 eventFunc.__executions + 1
             )  # returns name of function when called used by dc_client to get gifs. TODO: This needs to be changed. It is a bad solution long term
 
-        return stacker
+        return queuer
 
     """
     def interruptEventExample(self):
@@ -107,8 +107,8 @@ class GameboyEmulator:
         for event in self.__interruptEvents:
             self.event()
 
-    def __stackEventTick(self):
-        """The stackEventTick() method is used in stackEvents. It adds PIL images to the __imageBuffer."""
+    def __queueEventTick(self):
+        """The queueEventTick() method is used in queueEvents. It adds PIL images to the __imageBuffer."""
         self.__checkForInterruptEvents()
         self.emu.tick()
         self.__tickCounter += 1
@@ -117,13 +117,13 @@ class GameboyEmulator:
 
     def tick(self):
         """The tick() method is a tick meant to be passively used as it is interrupted by
-        both stackEvents and interruptEvents.
+        both queueEvents and interruptEvents.
         """
         self.__checkForInterruptEvents()
         if not self.__interrupt:
-            # When not interrupted if eventStack is not empty, execute the next event
-            if len(self.__eventStack) != 0:
-                self.__eventStack.pop(0)()
+            # When not interrupted if eventQueue is not empty, execute the next event
+            if len(self.__eventQueue) != 0:
+                self.__eventQueue.pop(0)()
             self.emu.tick()
             self.__tickCounter += 1
 
@@ -134,7 +134,7 @@ class GameboyEmulator:
             msec (int milliseconds): Number of milliseconds to run the emulator
         """
         for x in range(ticks):
-            self.__stackEventTick()
+            self.__queueEventTick()
 
     def saveGifFromBuffer(
         self,
@@ -223,7 +223,7 @@ class GameboyEmulator:
         else:
             print("Invalid button value sent to holdButton()")
 
-    @stackEvent
+    @queueEvent
     def pressButtonEvent(self, button, ticks):
         """(Event) Press a button for the given number of ticks
 

@@ -9,7 +9,7 @@ class PokemonEmu(GameboyEmulator):
         super().__init__("roms/Pokemon - Red Version (USA, Europe) (SGB Enhanced).gb")
         self.__direction = Button.UP
 
-    @GameboyEmulator.stackEvent
+    @GameboyEmulator.queueEvent
     def pressButtonEvent(self, button, ticks):
         """(Event) Press a button for the given number of ticks
 
@@ -23,7 +23,7 @@ class PokemonEmu(GameboyEmulator):
         self.runForTicks(ticks)
         self.releaseButton(button)
 
-    @GameboyEmulator.stackEvent
+    @GameboyEmulator.queueEvent
     def moveNumSpacesEvent(self, button, spaces):
         """(Event) Move a given number of spaces in a given direction
 
@@ -44,7 +44,7 @@ class PokemonEmu(GameboyEmulator):
         else:
             print("moveNumSpacesEvent expected directional input!")
 
-    @GameboyEmulator.stackEvent
+    @GameboyEmulator.queueEvent
     def changeDirection(self, button):
         """(Event) Change character to the given direction.
 
