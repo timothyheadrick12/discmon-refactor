@@ -10,7 +10,7 @@ class PokemonEmu(GameboyEmulator):
         self.__direction = Button.UP
 
     @GameboyEmulator.queueEvent
-    def pressButtonEvent(self, button, ticks):
+    def pressButtonEvent(self, button):
         """(Event) Press a button for the given number of ticks
 
         NOTE: A, B, START, and SELECT are read on release in Pokemon
@@ -20,8 +20,9 @@ class PokemonEmu(GameboyEmulator):
             ticks (int): Number of ticks to press the button
         """
         self.holdButton(button)
-        self.runForTicks(ticks)
+        self.runForTicks(4)
         self.releaseButton(button)
+        self.runForTicks(100)
 
     @GameboyEmulator.queueEvent
     def moveNumSpacesEvent(self, button, spaces):

@@ -29,9 +29,9 @@ class DiscordClient(discord.Client):
 
         if message.author == self.user:  # ignore self messages
             return
-        if message.content.startswith("$move"):
+        messageArgs = message.content.split()
+        if messageArgs[0] == "$move":
             # If the message is a move command handle it. Needs to be tested more
-            messageArgs = message.content.split()
             if messageArgs[1] == "w" or messageArgs[1] == "up":
                 if len(messageArgs) >= 3 and (not (isnan(int(messageArgs[2])))):
                     eventName = self.gb.moveNumSpacesEvent(
@@ -40,8 +40,8 @@ class DiscordClient(discord.Client):
                 else:
                     eventName = self.gb.moveNumSpacesEvent(Button.UP, 1)
                 filePath = "gifs/" + eventName + ".gif"
-                while not os.path.exists(filePath):
-                    time.sleep(0.4)
+                while not os.path.exists(filePath) or os.path.getsize(filePath) == 0:
+                    time.sleep(0.1)
                 await message.channel.send(
                     file=discord.File("gifs/" + eventName + ".gif")
                 )
@@ -53,8 +53,8 @@ class DiscordClient(discord.Client):
                 else:
                     eventName = self.gb.moveNumSpacesEvent(Button.LEFT, 1)
                 filePath = "gifs/" + eventName + ".gif"
-                while not os.path.exists(filePath):
-                    time.sleep(0.4)
+                while not os.path.exists(filePath) or os.path.getsize(filePath) == 0:
+                    time.sleep(0.1)
                 await message.channel.send(
                     file=discord.File("gifs/" + eventName + ".gif")
                 )
@@ -66,8 +66,8 @@ class DiscordClient(discord.Client):
                 else:
                     eventName = self.gb.moveNumSpacesEvent(Button.DOWN, 1)
                 filePath = "gifs/" + eventName + ".gif"
-                while not os.path.exists(filePath):
-                    time.sleep(0.4)
+                while not os.path.exists(filePath) or os.path.getsize(filePath) == 0:
+                    time.sleep(0.1)
                 await message.channel.send(file=discord.File(filePath))
             elif messageArgs[1] == "d" or messageArgs[1] == "right":
                 if len(messageArgs) >= 3 and (not (isnan(int(messageArgs[2])))):
@@ -77,11 +77,34 @@ class DiscordClient(discord.Client):
                 else:
                     eventName = self.gb.moveNumSpacesEvent(Button.RIGHT, 1)
                 filePath = "gifs/" + eventName + ".gif"
-                while not os.path.exists(filePath):
-                    time.sleep(0.4)
+                while not os.path.exists(filePath) or os.path.getsize(filePath) == 0:
+                    time.sleep(0.1)
                 await message.channel.send(
                     file=discord.File("gifs/" + eventName + ".gif")
                 )
+            else:
+                await message.channel.send(
+                    "Invalid command format try: $move (direction) (numSpaces)"
+                )
+        elif messageArgs[0] == "$press":
+            # If the message is a press command handle it. Needs to be tested more
+            if messageArgs[1] == "a" or messageArgs[1] == "A":
+                eventName = self.gb.pressButtonEvent(Button.A)
+                filePath = "gifs/" + eventName + ".gif"
+                while not os.path.exists(filePath) or os.path.getsize(filePath) == 0:
+                    time.sleep(0.1)
+                await message.channel.send(
+                    file=discord.File("gifs/" + eventName + ".gif")
+                )
+            elif messageArgs[1] == "b" or messageArgs[1] == "B":
+                eventName = self.gb.pressButtonEvent(Button.B)
+                filePath = "gifs/" + eventName + ".gif"
+                while not os.path.exists(filePath) or os.path.getsize(filePath) == 0:
+                    time.sleep(0.1)
+                await message.channel.send(
+                    file=discord.File("gifs/" + eventName + ".gif")
+                )
+                print("bird")
             else:
                 await message.channel.send(
                     "Invalid command format try: $move (direction) (numSpaces)"
