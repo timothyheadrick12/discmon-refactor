@@ -107,7 +107,7 @@ class DiscordClient(discord.Client):
                 print("bird")
             else:
                 await message.channel.send(
-                    "Invalid command format try: $move (direction) (numSpaces)"
+                    "Invalid command format try: $press (button)"
                 )
 
 
