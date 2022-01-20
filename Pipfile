@@ -7,6 +7,7 @@ name = "pypi"
 pyboy = "*"
 "discord.py" = "*"
 numpy = "*"
+flask = "*"
 
 [dev-packages]
 black = "*"
