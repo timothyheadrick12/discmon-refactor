@@ -4,7 +4,7 @@
   "description": "Bot to interface with python discmon emulator",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/Bot.ts"
+    "start": "ts-node src/index.ts"
   },
   "author": "",
   "license": "ISC",

@@ -6,7 +6,7 @@ class PokemonEmu(GameboyEmulator):
     directions = [Button.UP, Button.DOWN, Button.LEFT, Button.RIGHT]
 
     def __init__(self):
-        super().__init__("roms/Pokemon - Red Version (USA, Europe) (SGB Enhanced).gb")
+        super().__init__("./roms/Pokemon - Red Version (USA, Europe) (SGB Enhanced).gb")
         self.__direction = Button.UP
 
     @GameboyEmulator.queueEvent

@@ -113,7 +113,8 @@ class GameboyEmulator:
         self.emu.tick()
         self.__tickCounter += 1
         if self.__tickCounter % self.__captureRate == 0:
-            self.__imageBuffer.append(self.__screen.screen_image())
+            # should probably change the resize method
+            self.__imageBuffer.append(self.__screen.screen_image().resize((320, 288)))
 
     def tick(self):
         """The tick() method is a tick meant to be passively used as it is interrupted by

@@ -1,3 +1,5 @@
-discmon/__pycache__
+discmon/emulator/__pycache__
 tests/__pycache__
 .vscode
+discmon/bot/config.json
+discmon/bot/node_modules
