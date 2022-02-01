@@ -221,30 +221,38 @@ client.once('ready', () => {
   )
   client.channels.fetch('865669995438538756').then((channel: TextChannel) => {
     channel.send({
-      content: 'Pokemon Red!',
+      content: 'Pokemon Red - Controls!',
       components: buttonRows,
+    })
+    channel.send({
+      content: 'Pokemon Red - Screen!',
     })
   })
 })
 
 client.on('interactionCreate', async (interaction: Interaction) => {
   if (!interaction.isButton()) return
+  //if one of the button is pressed
   if (
     ['left', 'right', 'up', 'down', 'a_button', 'b_button'].includes(
       interaction.customId
     )
   ) {
-    await interaction.deferReply()
+    //delete previous messages - this is scuffed
+    interaction.channel?.messages.cache.forEach((message) => {
+      if (message.content !== 'Pokemon Red - Controls!') {
+        message.delete()
+      }
+    })
+    interaction.channel?.messages.cache.clear() //clear cache to not retry deletes
+    await interaction.deferReply() //wait for fetch to reply
     const {fileName} = await fetch(
       'http://127.0.0.1:5000/' + interaction.customId.at(0)
-    ).then((response: any) => response.json())
+    ).then((response: any) => response.json()) //fetch gif from python
     interaction.editReply({
-      content: 'Pokemon Red!',
-      components: buttonRows,
+      content: 'Pokemon Red - Screen!',
       files: ['../emulator/' + fileName],
-    })
-    interaction.channel?.messages.cache.forEach((message) => message.delete())
-    interaction.channel?.messages.cache.clear()
+    }) //send message
   }
 })
 
