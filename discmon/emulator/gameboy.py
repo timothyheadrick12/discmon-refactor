@@ -39,6 +39,7 @@ class GameboyEmulator:
         self.__tickCounter = 0
         self.emu = PyBoy(game)
         self.__screen = self.emu.botsupport_manager().screen()
+        self.__screenScale = 2
         self.emu.set_emulation_speed(0)
 
     def queueEvent(eventFunc):
@@ -114,7 +115,11 @@ class GameboyEmulator:
         self.__tickCounter += 1
         if self.__tickCounter % self.__captureRate == 0:
             # should probably change the resize method
-            self.__imageBuffer.append(self.__screen.screen_image().resize((320, 288)))
+            self.__imageBuffer.append(
+                self.__screen.screen_image().resize(
+                    (int(160 * self.__screenScale), int(144 * self.__screenScale))
+                )
+            )
 
     def tick(self):
         """The tick() method is a tick meant to be passively used as it is interrupted by
